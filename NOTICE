@@ -1,0 +1,11 @@
+Kimi and the Kimi mark are trademarks of Moonshot AI.
+
+icons/kimi.svg is the unmodified k-only-light.svg asset from MoonshotAI's official Branding-Guide:
+https://github.com/MoonshotAI/Branding-Guide/blob/main/scenarios/04-k-only/k-only-light.svg
+https://www.kimi.com/en/resources/kimi-brand
+
+The icon is not covered by this project's MIT license. Refer to Moonshot AI's brand guidelines and applicable terms for use of the mark.
+
+Account and quota field names were verified against the official Kimi Code implementation:
+https://github.com/MoonshotAI/kimi-code/blob/main/packages/oauth/src/managed-userinfo.ts
+https://github.com/MoonshotAI/kimi-code/blob/main/packages/oauth/src/managed-usage.ts

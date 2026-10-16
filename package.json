@@ -1,0 +1,45 @@
+{
+  "name": "bb-plugin-kimi-usage",
+  "version": "0.2.0",
+  "type": "module",
+  "engines": {
+    "bb": ">=0.46",
+    "bbPluginSdk": ">=0.6.49"
+  },
+  "bb": {
+    "name": "Kimi Code",
+    "description": "Kimi Code provider for BB with native model discovery, account, subscription and quota integration.",
+    "branding": {
+      "icon": "./icons/kimi.svg"
+    },
+    "server": "./server.ts",
+    "host": "./host.ts",
+    "skills": [
+      "skills"
+    ]
+  },
+  "dependencies": {
+    "zod": "^4.6.5",
+    "@get-bb/plugin-sdk": "0.6.49"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.3.0",
+    "hono": "^4.13.13",
+    "typescript": "^5.7.0"
+  },
+  "scripts": {
+    "check": "tsc --noEmit",
+    "test": "node --experimental-strip-types --test *.test.ts && node --experimental-strip-types session-check.ts"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/linniksa/bb-plugin-kimi-cli.git"
+  },
+  "homepage": "https://github.com/linniksa/bb-plugin-kimi-cli#readme",
+  "bugs": {
+    "url": "https://github.com/linniksa/bb-plugin-kimi-cli/issues"
+  }
+}
