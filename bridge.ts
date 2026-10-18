@@ -1,7 +1,7 @@
 import { experimental_acpProviderBridge } from '@get-bb/plugin-sdk/provider-bridge/acp';
 import {
   createBridgeIo, createBridgeLineHandler, runBridgeRequest,
-  providerMaintenanceParamsSchema, providerUsageResultSchema, providerHealthResultSchema, experimental_readCliVersion,
+  providerMaintenanceParamsSchema, providerUsageResultSchema,
   providerInstallationStatusParamsSchema, providerInstallationStatusSchema,
   providerInstallationRunParamsSchema, providerInstallationRunResultSchema,
 } from '@get-bb/plugin-sdk/provider-bridge';
@@ -9,6 +9,7 @@ import { z } from 'zod';
 import { collectUsage } from './collect.ts';
 import { providerId } from './provider.ts';
 import { getInstallationStatus, getInstallationRun } from './installation.ts';
+import { getHealth } from './health.ts';
 
 const maintenanceRequestSchema = z.object({
   jsonrpc: z.literal('2.0'),
@@ -51,6 +52,10 @@ export const experimental_providerBridge = {
           io.sendResult(request.id, providerInstallationRunResultSchema.parse(await getInstallationRun(request.params.action)));
           return;
         }
+        if (request.method === 'provider/health') {
+          io.sendResult(request.id, await getHealth());
+          return;
+        }
         const usage = await collectUsage(AbortSignal.timeout(30000));
         if (request.method === 'provider/usage') {
           // BB's bridge caps percentages at 100 and omits absent cost; quota RPC preserves raw overage.
@@ -58,18 +63,6 @@ export const experimental_providerBridge = {
           io.sendResult(request.id, providerUsageResultSchema.parse({ supported: true, usage: bridgeUsage }));
           return;
         }
-        io.sendResult(request.id, providerHealthResultSchema.parse({ supported: true, health: {
-          status: usage.status === 'ok' ? 'ready' : usage.status === 'error' ? 'unknown' : usage.status,
-          accountEmail: usage.accountEmail,
-          planLabel: usage.planLabel,
-          statusMessage: usage.status === 'error' ? usage.message : null,
-          installedVersion: usage.status === 'not_installed' ? null : await experimental_readCliVersion('kimi'),
-          minimumSupportedVersion: null,
-          canInstall: false,
-          canUpdate: false,
-          loginCommand: 'kimi login',
-          localLoginCommand: 'kimi login',
-        } }));
       } });
     },
   }),
