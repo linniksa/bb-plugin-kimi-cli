@@ -1,4 +1,4 @@
-// shortcut: uses Python Kimi CLI internals, update this adapter when migrating to the newer Node CLI.
+// shortcut: uses Python Kimi Code internals, update this adapter when migrating to the newer Node CLI.
 export const collector = String.raw`
 import asyncio, json
 from loguru import logger

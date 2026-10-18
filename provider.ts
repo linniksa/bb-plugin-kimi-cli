@@ -1,14 +1,15 @@
 import type { BbPluginApi } from '@get-bb/plugin-sdk';
 
-export const providerId = 'acp-kimi';
+export const providerId = 'kimi-cli';
+export const providerName = 'Kimi Code';
 export const provider = {
   id: providerId,
-  displayName: 'Kimi Code',
+  displayName: providerName,
   family: 'acp',
   icon: './icons/kimi.svg',
   experimental_bridgeOptions: {
     acpDialect: 'generic',
-    acpLaunchSpec: { displayName: 'Kimi Code', command: 'kimi', args: ['acp'], env: {} },
+    acpLaunchSpec: { displayName: providerName, command: 'kimi', args: ['acp'], env: {} },
   },
   maintenance: { health: true, usage: true, installation: false },
   capabilities: {
@@ -24,8 +25,8 @@ export const provider = {
   composerActions: [],
   models: { scope: 'host' },
   strings: {
-    signInHint: 'Run `kimi login` on this machine, then refresh.',
-    expiredHint: 'Your Kimi Code login expired. Run `kimi login`, then refresh.',
-    installUrl: 'https://github.com/MoonshotAI/kimi-cli',
+    signInHint: 'Run `kimi login` on the machine to sign in.',
+    expiredHint: 'Your Kimi Code session expired. Run `kimi login`, then reload.',
+    installUrl: 'https://www.kimi.com/code/docs/en/kimi-code-cli/guides/getting-started',
   },
 } satisfies Parameters<BbPluginApi['providers']['register']>[0];

@@ -8,8 +8,8 @@ import { PROVIDER_BRIDGE_PROTOCOL_VERSION, providerHealthResultSchema, providerU
 import { experimental_providerBridge } from './bridge.ts';
 import { provider } from './provider.ts';
 
-test('provider bridge keeps ACP handshake and validates Kimi maintenance responses', async () => {
-  const root = await mkdtemp(join(tmpdir(), 'kimi-provider-test-'));
+test('provider bridge keeps ACP handshake and validates Kimi Code maintenance responses', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'kimi-cli-provider-test-'));
   const savedPath = process.env.PATH;
   const harness = experimental_createBridgeJsonRpcTestHarness(experimental_providerBridge.handleLine);
   try {

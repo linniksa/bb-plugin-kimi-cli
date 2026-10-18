@@ -15,7 +15,7 @@ import { provider } from './provider.ts';
 const full = { permissionMode: 'full', permissionScope: 'full', approvalReviewer: null, permissionEscalation: null };
 const providerOptions = {
   ...provider.experimental_bridgeOptions,
-  acpLaunchSpec: { displayName: 'Kimi fixture', command: process.execPath, args: [fileURLToPath(new URL('./test-fixtures/acp-agent.mjs', import.meta.url))], env: {} },
+  acpLaunchSpec: { displayName: 'Kimi Code fixture', command: process.execPath, args: [fileURLToPath(new URL('./test-fixtures/acp-agent.mjs', import.meta.url))], env: {} },
 };
 const options = { ...full, providerOptions };
 const send = (id: number, method: string, params: unknown) => bridge.handleLine(JSON.stringify({ jsonrpc: '2.0', id, method, params }));

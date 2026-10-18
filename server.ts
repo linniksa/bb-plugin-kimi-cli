@@ -1,16 +1,16 @@
 import type { BbPluginApi } from '@get-bb/plugin-sdk';
 import type { z } from 'zod';
 import { hostContract, usageContract, measurement } from './contract.ts';
-import { provider } from './provider.ts';
+import { provider, providerId, providerName } from './provider.ts';
 
-export default function kimiUsage(bb: BbPluginApi) {
+export default function kimiCli(bb: BbPluginApi) {
   const registration = bb.providers.register(provider);
   bb.onDispose(() => registration.dispose());
   const host = bb.hosts.experimental_client({ contract: hostContract });
   const cache = new Map<string, { time: number; value: z.infer<typeof measurement> }>();
   const pending = new Map<string, Promise<z.infer<typeof measurement>>>();
   async function resources() {
-    return (await bb.sdk.hosts.list()).filter(h => h.status === 'connected' && h.type !== 'ephemeral').map(h => ({ id: h.id, providerId: 'acp-kimi', accountKey: null, label: 'Kimi CLI', scope: { kind: 'host' as const, hostId: h.id, hostName: h.name } }));
+    return (await bb.sdk.hosts.list()).filter(h => h.status === 'connected' && h.type !== 'ephemeral').map(h => ({ id: h.id, providerId, accountKey: null, label: providerName, scope: { kind: 'host' as const, hostId: h.id, hostName: h.name } }));
   }
   bb.rpc.register(usageContract, {
     'provider-usage.v1.listResources': async () => ({ resources: await resources() }),
@@ -28,5 +28,5 @@ export default function kimiUsage(bb: BbPluginApi) {
       pending.set(resourceId, request);
       return request;
     },
-  }, { experimental_discoverable: true, experimental_description: 'Kimi Code quota from host-local Kimi CLI credentials. No credentials leave the host.' });
+  }, { experimental_discoverable: true, experimental_description: 'Kimi Code quota from host-local credentials. No credentials leave the host.' });
 }

@@ -6,6 +6,7 @@ import {
 } from '@get-bb/plugin-sdk/provider-bridge';
 import { z } from 'zod';
 import { collectUsage } from './collect.ts';
+import { providerId } from './provider.ts';
 
 const requestSchema = z.object({
   jsonrpc: z.literal('2.0'),
@@ -28,12 +29,12 @@ export const experimental_providerBridge = {
       const parsed = requestSchema.safeParse(message);
       if (!parsed.success) {
         const id = typeof message === 'object' && message !== null && 'id' in message ? message.id : null;
-        if (typeof id === 'string' || typeof id === 'number') io.sendError(id, -32602, 'Invalid Kimi maintenance request.');
+        if (typeof id === 'string' || typeof id === 'number') io.sendError(id, -32602, 'Invalid Kimi Code maintenance request.');
         return;
       }
       runBridgeRequest({ request: parsed.data, sendError: io.sendError, handleRequest: async request => {
-        if (request.params.providerId !== 'acp-kimi') {
-          io.sendError(request.id, -32602, 'Unknown Kimi provider.');
+        if (request.params.providerId !== providerId) {
+          io.sendError(request.id, -32602, 'Unknown Kimi Code provider.');
           return;
         }
         const usage = await collectUsage(AbortSignal.timeout(30000));
