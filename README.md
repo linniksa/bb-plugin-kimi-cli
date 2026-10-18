@@ -59,6 +59,8 @@ These are not an operating-system sandbox. A permitted shell process is not conf
 
 Automatic reviewer mode, fast service tiers, fork, archive forwarding and manual compaction are not advertised. Feature parity with other providers is limited by Kimi and BB's ACP bridge.
 
+See the [Claude Code comparison](docs/provider-comparison.md) for the current feature matrix, version-dependent opportunities and remaining integration gaps.
+
 ## Native skills and diagnostics
 
 BB discovers Kimi Code user, project and configured extra skill directories on the workspace host. Discovery follows the installed CLI generation, the nearest Git project root, legacy brand-directory precedence and `merge_all_available_skills`. Modern data roots honor `KIMI_CODE_HOME`; legacy skill roots follow the CLI's fixed skill locations independently of its data directory. Canonical `SKILL.md` directories and flat Markdown skills are supported. Vendor-plugin and built-in skill inventories are not imported into BB; BB-provided plugin skills remain available through the normal agent configuration.
@@ -83,7 +85,7 @@ npm test
 bb plugin build .
 ```
 
-The tests cover quota/profile parsing, maintenance protocol validation, the shared ACP bridge's conformance suite, and allow/deny/full-access behavior against a synthetic ACP agent. They do not establish operating-system isolation or test every Kimi tool. Live checks also verified provider registration, model availability, and account/quota collection; the graphical UI has not been inspected.
+The tests cover quota/profile identity, local health and credential boundaries, usage inventory/cache/refresh failures, native skill roots, diagnostic command routing, installer selection, maintenance validation, ACP conformance, and allow/deny/full-access behavior. They do not establish operating-system isolation or test every Kimi tool. Live checks also verified provider registration, model availability, and account/quota collection; the graphical UI has not been inspected.
 
 ## License and attribution
 

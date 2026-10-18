@@ -1,6 +1,6 @@
 {
   "name": "bb-plugin-kimi-cli",
-  "version": "0.2.0",
+  "version": "0.5.0",
   "type": "module",
   "engines": {
     "bb": ">=0.46",
