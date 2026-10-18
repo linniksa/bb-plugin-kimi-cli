@@ -20,13 +20,16 @@ test('account and subscription come from the Kimi profile, with no guessed tier'
   const result = parseUsage(quota, profile);
   assert.equal(result.accountEmail, 'user@example.test');
   assert.equal(result.planLabel, 'Moderato');
+  assert.equal(result.accountKey, 'moonshot:kimi-code:user:fixture-user');
   const nickname = parseUsage(quota, { ...profile, email: '', user_level_name: '' });
-  assert.equal(nickname.accountEmail, 'Test User');
+  assert.equal(nickname.accountEmail, null);
   assert.equal(nickname.planLabel, null);
   const unavailable = parseUsage(quota, { error: 'unavailable' });
   assert.equal(unavailable.status, 'ok');
   assert.equal(unavailable.accountEmail, null);
   assert.equal(unavailable.planLabel, null);
+  assert.equal(unavailable.accountKey, null);
+  assert.equal(parseUsage(quota, { ...profile, user_id: '' }).accountKey, null);
 });
 
 test('modern quota supports monthly windows and rejects an empty quota response', () => {

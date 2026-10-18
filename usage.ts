@@ -8,11 +8,12 @@ const nodePayload = z.object({ usages: z.object({
   limit_7d: quotaEntry.optional(), limit_5h: quotaEntry.optional(),
   limit_month_total: quotaEntry.optional(), limit_month_code: quotaEntry.optional(),
 }) });
-export const usageBase = { accountEmail: null, planLabel: null };
+export const usageBase = { accountKey: null, accountEmail: null, planLabel: null };
+const accountKey = z.string().min(1).nullable().default(null);
 export const usageSchema = z.discriminatedUnion('status', [
-  z.object({ status: z.literal('ok'), accountEmail: z.string().nullable(), planLabel: z.string().nullable(), windows: z.array(z.object({ id: z.string(), kind: z.enum(['weekly', 'five-hour', 'custom']), label: z.string(), usedPercent: z.number().nonnegative(), resetsAt: z.string().nullable(), model: z.null(), cost: z.null() })) }),
-  z.object({ status: z.enum(['not_installed', 'unauthenticated', 'expired']), accountEmail: z.null(), planLabel: z.null() }),
-  z.object({ status: z.literal('error'), accountEmail: z.null(), planLabel: z.null(), message: z.string() }),
+  z.object({ status: z.literal('ok'), accountKey, accountEmail: z.string().nullable(), planLabel: z.string().nullable(), windows: z.array(z.object({ id: z.string(), kind: z.enum(['weekly', 'five-hour', 'custom']), label: z.string(), usedPercent: z.number().nonnegative(), resetsAt: z.string().nullable(), model: z.null(), cost: z.null() })) }),
+  z.object({ status: z.enum(['not_installed', 'unauthenticated', 'expired']), accountKey, accountEmail: z.null(), planLabel: z.null() }),
+  z.object({ status: z.literal('error'), accountKey, accountEmail: z.null(), planLabel: z.null(), message: z.string() }),
 ]);
 const accountSchema = z.object({
   user_id: z.string().min(1),
@@ -22,7 +23,8 @@ const accountSchema = z.object({
 });
 export function parseUsage(input: unknown, profile: unknown = null): z.infer<typeof usageSchema> {
   const account = accountSchema.safeParse(profile);
-  const identity = { accountEmail: account.success ? account.data.email || account.data.nickname || null : null, planLabel: account.success ? account.data.user_level_name || null : null };
+  const email = account.success ? z.email().safeParse(account.data.email) : null;
+  const identity = { accountKey: account.success ? `moonshot:kimi-code:user:${encodeURIComponent(account.data.user_id)}` : null, accountEmail: email?.success ? email.data : null, planLabel: account.success ? account.data.user_level_name || null : null };
   const modern = nodePayload.safeParse(input);
   if (modern.success) {
     const labels = { limit_7d: 'Weekly limit', limit_5h: 'Five-hour limit', limit_month_total: 'Monthly total', limit_month_code: 'Monthly code' };
