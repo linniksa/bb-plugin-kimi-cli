@@ -1,10 +1,19 @@
 import { defineRpcContract } from '@get-bb/plugin-sdk';
 import { z } from 'zod';
 import { usageSchema } from './usage.ts';
+import { providerHealthResultSchema, providerInstallationStatusSchema } from '@get-bb/plugin-sdk/provider-bridge';
 import { experimental_nativeRootsHostContract } from '@get-bb/plugin-sdk/host';
 export const measurement = z.object({ accountKey: z.string().min(1).nullable(), observedAt: z.number().int().nonnegative().nullable(), usage: usageSchema });
 export const usageContract = defineRpcContract({
   'provider-usage.v1.listResources': { input: z.object({}), output: z.object({ resources: z.array(z.object({ accountKey: z.string().min(1).nullable(), id: z.string(), providerId: z.string(), label: z.string(), scope: z.object({ kind: z.literal('host'), hostId: z.string(), hostName: z.string() }) })) }), experimental_description: 'List Kimi Code quota resources, including disconnected machines, without contacting Kimi.' },
   'provider-usage.v1.getResource': { input: z.object({ resourceId: z.string().min(1), refresh: z.boolean() }), output: measurement, experimental_description: 'Collect subscription usage using the existing Kimi Code login on the selected machine.' },
 });
-export const hostContract = defineRpcContract({ ...experimental_nativeRootsHostContract, collect: { input: z.object({}), output: usageSchema } });
+export const diagnosticsSchema = z.object({
+  health: providerHealthResultSchema, installation: providerInstallationStatusSchema,
+  kind: z.enum(['python', 'node']), manager: z.enum(['brew', 'uv', 'npm', 'native']).nullable(), hints: z.array(z.string()),
+});
+export const hostContract = defineRpcContract({
+  ...experimental_nativeRootsHostContract,
+  collect: { input: z.object({}), output: usageSchema },
+  inspect: { input: z.object({ checkUpdates: z.boolean() }), output: diagnosticsSchema },
+});

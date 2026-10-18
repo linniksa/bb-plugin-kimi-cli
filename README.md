@@ -44,6 +44,10 @@ Updating a Python installation does not migrate it to Node. Python Kimi Code is 
 
 After a tracking Git/npm installation, plugin updates use `bb plugin update kimi-cli`. BB applies compatible updates on request; it does not apply plugin updates automatically. Exact pins stay pinned. Local path installs do not download updates: update the source checkout, build it and reload the plugin on the BB server.
 
+Use `bb kimi status --help` for read-only diagnostics and update hints on the selected machine. A normal status check stays local. Add `--check-updates` to query the CLI registry without installing anything; `--json` returns structured diagnostics without credentials. The command distinguishes the plugin source from the CLI installation channel and does not schedule unattended upgrades.
+
+Legacy Python CLI startup update reminders are controlled by `KIMI_CLI_NO_AUTO_UPDATE`. They are interactive reminders, not an ACP auto-update service. Modern native CLI updates and package-manager updates remain separate from BB plugin updates. Follow the [official Kimi Code installation guide](https://github.com/MoonshotAI/kimi-code/blob/main/docs/en/guides/getting-started.md) for current CLI upgrade options.
+
 ## Permissions
 
 Use BB's thread permission selector:

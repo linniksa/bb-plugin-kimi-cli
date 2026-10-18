@@ -11,4 +11,6 @@ Use `bb provider list`, `bb provider models kimi-cli`, and `bb settings usage --
 
 Permissions follow BB's thread mode; consult the package README for the supported modes and their boundaries. Do not equate availability of an MCP tool with permission to call it without confirmation. There is no global trusted-tool policy in this plugin.
 
+Use `bb kimi status --help` for machine selection, local readiness and update guidance. Registry checks are opt-in; diagnostics never install updates or expose credentials. CLI installation/update actions use BB's provider maintenance UI and preserve the detected package manager. Tracking Git/npm plugin updates use `bb plugin update kimi-cli`; local path sources must be rebuilt and reloaded from their checkout. Neither path enables automatic update application. An unknown install source is not automatically replaced.
+
 Native skills are resolved on the workspace host using the detected CLI generation. See the package README for supported CLI versions, installation and development checks. Use bb-cli for standard plugin build, install and reload procedures.
