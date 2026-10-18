@@ -55,7 +55,7 @@ These are not an operating-system sandbox. A permitted shell process is not conf
 
 Automatic reviewer mode, fast service tiers, fork, archive forwarding and manual compaction are not advertised. Feature parity with other providers is limited by Kimi and BB's ACP bridge.
 
-Health checks only read the local executable and existing file credentials. They never contact the quota service, refresh a token or migrate keyring storage. Account and subscription metadata come from usage collection instead.
+Health checks only read the local executable and existing file credentials. They never contact the quota service, refresh a token or migrate keyring storage. Account and subscription metadata come from usage collection instead. Usage resources retain disconnected machines, return collection failures as unavailable states, and use provider-issued user identity to recognize the same account across machines. Explicit refresh requests fetch after an older background request rather than accepting its result.
 
 ## Privacy and compatibility
 
