@@ -24,6 +24,7 @@ export const provider = {
   },
   composerActions: [],
   models: { scope: 'host' },
+  experimental_resolvesNativeRoots: true,
   strings: {
     signInHint: 'Run `kimi login` on the machine to sign in.',
     expiredHint: 'Your Kimi Code session expired. Run `kimi login`, then reload.',
