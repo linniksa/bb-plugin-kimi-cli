@@ -34,6 +34,16 @@ Plugin 0.2 used the plugin ID `kimi-usage`; version 0.3 used `kimi-cli` with the
 
 Upstream identifiers remain unchanged: the executable is `kimi`, the modern npm package is `@moonshot-ai/kimi-code`, and its configuration uses `KIMI_CODE_HOME`, `.kimi-code` and `managed:kimi-code`. These are CLI interfaces, not alternative names for this plugin.
 
+## CLI installation and updates
+
+Kimi Code appears in BB's standard provider maintenance UI with installation status, installed/latest versions, and Install/Update actions. The bridge returns commands to BB for execution and verification; checking status never runs an installer.
+
+A new installation uses the current Node CLI through npm, or Homebrew when npm is unavailable. Updates stay in the detected channel: Homebrew's matching formula, uv's legacy Python tool, npm's modern package, or the modern native updater. Unknown installations offer no automatic update. Version checks use the corresponding registry; an unavailable registry does not become a zero version or a guessed update.
+
+Updating a Python installation does not migrate it to Node. Python Kimi Code is archived; migration requires installing the successor and logging in again. Follow the [official migration instructions](https://github.com/MoonshotAI/kimi-cli#readme). The plugin does not migrate sessions, change accounts, or uninstall an existing CLI.
+
+After a tracking Git/npm installation, plugin updates use `bb plugin update kimi-cli`. BB applies compatible updates on request; it does not apply plugin updates automatically. Exact pins stay pinned. Local path installs do not download updates: update the source checkout, build it and reload the plugin on the BB server.
+
 ## Permissions
 
 Use BB's thread permission selector:
