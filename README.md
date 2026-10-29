@@ -6,9 +6,9 @@ The plugin registers `acp-kimi` directly through BB's provider API and uses BB's
 
 ## Requirements and installation
 
-- BB 0.46+ with Plugin SDK 0.6.49-compatible APIs.
+- BB 0.47.1+ with Plugin SDK 0.6.79-compatible APIs.
 - Python Kimi CLI on PATH, signed in with `kimi login`. Tested on macOS with CLI 1.50.0.
-- Node.js 22.18+ for source checks.
+- Node.js 22.19+ for source checks.
 
 Install directly from GitHub:
 
