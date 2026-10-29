@@ -57,6 +57,10 @@ These are not an operating-system sandbox. A permitted shell process is not conf
 
 Automatic reviewer mode, fast service tiers, fork, archive forwarding and manual compaction are not advertised. Feature parity with other providers is limited by Kimi and BB's ACP bridge.
 
+## Local health
+
+Health checks only read the local executable and existing file credentials. They never contact the quota service, refresh a token or migrate keyring storage. Account and subscription metadata come from usage collection instead.
+
 ## Privacy and compatibility
 
 Credentials remain on their machine. Kimi Code owns token refresh and its locking; only quota and displayable account metadata cross host RPC. The plugin does not store tokens, proxy inference requests, or log account responses. Collection is bounded and quota RPC results are cached briefly; explicit refresh fetches again.
