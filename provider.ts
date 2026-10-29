@@ -11,7 +11,7 @@ export const provider = {
     acpDialect: 'generic',
     acpLaunchSpec: { displayName: providerName, command: 'kimi', args: ['acp'], env: {} },
   },
-  maintenance: { health: true, usage: true, installation: false },
+  maintenance: { health: true, usage: true, installation: true },
   capabilities: {
     supportsServiceTier: false,
     supportsNativeUserQuestion: false,

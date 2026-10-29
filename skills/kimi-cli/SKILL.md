@@ -10,3 +10,5 @@ The plugin, provider and skill use `kimi-cli`; BB displays **Kimi Code**. The pa
 Use `bb provider list`, `bb provider models kimi-cli`, and `bb settings usage --refresh` to inspect registration, model discovery and quota. Use `kimi login` on the affected machine for an expired login. Never print credentials or raw tokens.
 
 Permissions follow BB's thread mode; consult the package README for the supported modes and their boundaries. Do not equate availability of an MCP tool with permission to call it without confirmation. There is no global trusted-tool policy in this plugin.
+
+CLI installation/update actions use BB provider maintenance and preserve the detected package manager. Plugin and CLI updates are separate; consult the README for their supported paths.

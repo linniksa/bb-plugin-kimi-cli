@@ -1,28 +1,34 @@
 import { experimental_acpProviderBridge } from '@get-bb/plugin-sdk/provider-bridge/acp';
 import {
   createBridgeIo, createBridgeLineHandler, runBridgeRequest,
-  providerMaintenanceParamsSchema, providerUsageResultSchema, providerHealthResultSchema,
-  experimental_readCliVersion,
+  providerMaintenanceParamsSchema, providerUsageResultSchema, providerHealthResultSchema, experimental_readCliVersion,
+  providerInstallationStatusParamsSchema, providerInstallationStatusSchema,
+  providerInstallationRunParamsSchema, providerInstallationRunResultSchema,
 } from '@get-bb/plugin-sdk/provider-bridge';
 import { z } from 'zod';
 import { collectUsage } from './collect.ts';
 import { providerId } from './provider.ts';
+import { getInstallationStatus, getInstallationRun } from './installation.ts';
 
-const requestSchema = z.object({
+const maintenanceRequestSchema = z.object({
   jsonrpc: z.literal('2.0'),
   id: z.union([z.string(), z.number()]),
   method: z.enum(['provider/health', 'provider/usage']),
   params: providerMaintenanceParamsSchema,
 });
+const requestSchema = z.union([maintenanceRequestSchema,
+  z.object({ jsonrpc: z.literal('2.0'), id: z.union([z.string(), z.number()]), method: z.literal('provider/installation/status'), params: providerInstallationStatusParamsSchema }),
+  z.object({ jsonrpc: z.literal('2.0'), id: z.union([z.string(), z.number()]), method: z.literal('provider/installation/run'), params: providerInstallationRunParamsSchema }),
+]);
 const io = createBridgeIo();
 
-// BB's ACP bridge owns sessions, tools and permissions; Kimi supplies only its account/usage methods.
+// BB's ACP bridge owns sessions, tools and permissions; Kimi supplies its maintenance methods.
 export const experimental_providerBridge = {
   ...experimental_acpProviderBridge,
   handleLine: createBridgeLineHandler({
     handleParsedMessage(message) {
       const method = typeof message === 'object' && message !== null && 'method' in message ? message.method : null;
-      if (method !== 'provider/health' && method !== 'provider/usage') {
+      if (method !== 'provider/health' && method !== 'provider/usage' && method !== 'provider/installation/status' && method !== 'provider/installation/run') {
         experimental_acpProviderBridge.handleLine(JSON.stringify(message));
         return;
       }
@@ -35,6 +41,14 @@ export const experimental_providerBridge = {
       runBridgeRequest({ request: parsed.data, sendError: io.sendError, handleRequest: async request => {
         if (request.params.providerId !== providerId) {
           io.sendError(request.id, -32602, 'Unknown Kimi Code provider.');
+          return;
+        }
+        if (request.method === 'provider/installation/status') {
+          io.sendResult(request.id, providerInstallationStatusSchema.parse(await getInstallationStatus(request.params.checkUpdates)));
+          return;
+        }
+        if (request.method === 'provider/installation/run') {
+          io.sendResult(request.id, providerInstallationRunResultSchema.parse(await getInstallationRun(request.params.action)));
           return;
         }
         const usage = await collectUsage(AbortSignal.timeout(30000));

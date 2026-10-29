@@ -4,7 +4,7 @@ import { mkdtemp, writeFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { experimental_createBridgeJsonRpcTestHarness } from '@get-bb/plugin-sdk/provider-bridge/testing';
-import { PROVIDER_BRIDGE_PROTOCOL_VERSION, providerHealthResultSchema, providerUsageResultSchema } from '@get-bb/plugin-sdk/provider-bridge';
+import { PROVIDER_BRIDGE_PROTOCOL_VERSION, providerHealthResultSchema, providerUsageResultSchema, providerInstallationStatusSchema } from '@get-bb/plugin-sdk/provider-bridge';
 import { experimental_providerBridge } from './bridge.ts';
 import { provider } from './provider.ts';
 
@@ -24,6 +24,11 @@ test('provider bridge keeps ACP handshake and validates Kimi Code maintenance re
     harness.sendRequest(4, 'provider/health', { providerId: provider.id });
     const missing = providerHealthResultSchema.parse((await harness.waitForResponse(4)).result);
     assert.equal(missing.supported && missing.health.status, 'not_installed');
+    harness.sendRequest(6, 'provider/installation/status', { providerId: provider.id, checkUpdates: false });
+    assert.equal(providerInstallationStatusSchema.parse((await harness.waitForResponse(6)).result).installed, false);
+    harness.sendRequest(7, 'provider/installation/run', { providerId: provider.id, action: 'delete' });
+    assert.equal((await harness.waitForResponse(7)).error?.code, -32602);
+
     const output = JSON.stringify({ status: 'ok', payload: { usage: { limit: 100, used: 120 } }, account: { user_id: 'test-user', email: 'test@example.test', user_level_name: 'Moderato' } });
     await writeFile(join(root, 'python'), `#!/bin/sh\nprintf '%s\\n' '${output}'\n`, { mode: 0o755 });
     await writeFile(join(root, 'kimi'), `#!${join(root, 'python')}\n`, { mode: 0o755 });
