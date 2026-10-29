@@ -67,6 +67,8 @@ These are not an operating-system sandbox. A permitted shell process is not conf
 
 Automatic reviewer mode, fast service tiers, fork, archive forwarding and manual compaction are not advertised. Feature parity with other providers is limited by Kimi and BB's ACP bridge.
 
+See the [Claude Code comparison](docs/provider-comparison.md) for the current feature matrix, version-dependent opportunities and remaining integration gaps.
+
 ## Native skills and diagnostics
 
 BB discovers Kimi Code user, project and configured extra skill directories on the workspace host. Discovery follows the installed CLI generation, the nearest Git project root, legacy brand-directory precedence and `merge_all_available_skills`. Modern data roots honor `KIMI_CODE_HOME`; legacy skill roots follow the CLI's fixed skill locations independently of its data directory. Canonical `SKILL.md` directories and flat Markdown skills are supported. Vendor-plugin and built-in skill inventories are not imported into BB; BB-provided plugin skills remain available through the normal agent configuration.
