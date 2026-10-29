@@ -20,8 +20,12 @@ export const provider = {
     supportsThreadArchive: false,
     supportsThreadRename: false,
     permissionModes: ['accept-edits', 'full'],
-    reasoningLevels: ['medium'],
+    reasoningLevels: ['none', 'low', 'medium', 'high', 'max'],
   },
+  reasoningLevels: [
+    { id: 'off', label: 'Off' }, { id: 'on', label: 'On' },
+    { id: 'low', label: 'Low' }, { id: 'high', label: 'High' }, { id: 'max', label: 'Max' },
+  ],
   composerActions: [],
   models: { scope: 'host' },
   experimental_resolvesNativeRoots: true,

@@ -10,6 +10,7 @@ import { collectUsage } from './collect.ts';
 import { providerId } from './provider.ts';
 import { getInstallationStatus, getInstallationRun } from './installation.ts';
 import { getHealth } from './health.ts';
+import { adaptKimiRequest } from './model-adapter.ts';
 
 const maintenanceRequestSchema = z.object({
   jsonrpc: z.literal('2.0'),
@@ -30,7 +31,10 @@ export const experimental_providerBridge = {
     handleParsedMessage(message) {
       const method = typeof message === 'object' && message !== null && 'method' in message ? message.method : null;
       if (method !== 'provider/health' && method !== 'provider/usage' && method !== 'provider/installation/status' && method !== 'provider/installation/run') {
-        experimental_acpProviderBridge.handleLine(JSON.stringify(message));
+        void adaptKimiRequest(message).then(request => experimental_acpProviderBridge.handleLine(JSON.stringify(request))).catch(() => {
+          const id = typeof message === 'object' && message !== null && 'id' in message ? message.id : null;
+          if (typeof id === 'string' || typeof id === 'number') io.sendError(id, -32603, 'Kimi Code model configuration could not be prepared.');
+        });
         return;
       }
       const parsed = requestSchema.safeParse(message);

@@ -48,6 +48,12 @@ Use `bb kimi status --help` for read-only diagnostics and update hints on the se
 
 Legacy Python CLI startup update reminders are controlled by `KIMI_CLI_NO_AUTO_UPDATE`. They are interactive reminders, not an ACP auto-update service. Modern native CLI updates and package-manager updates remain separate from BB plugin updates. Follow the [official Kimi Code installation guide](https://github.com/MoonshotAI/kimi-code/blob/main/docs/en/guides/getting-started.md) for current CLI upgrade options.
 
+## Models and Thinking
+
+Modern Node sessions expose their native model names and per-model Thinking controls. Legacy Python retains its existing ACP model catalog until its compatibility server is enabled.
+
+Local model metadata follows the selected CLI generation and launch environment. When existing managed credentials are readable, discovery can enrich names and thinking requirements from the official model catalog. This read-only request is bounded and briefly cached; offline discovery falls back to the CLI configuration. Tokens are not refreshed or sent to BB. Explicit model overrides take precedence over enrichment. Declared effort sets constrain inherited choices and defaults; absent effort metadata preserves the native CLI catalog. Without an authoritative effort declaration, Node 2.3.3 can still advertise an inherited current effort that it later rejects.
+
 ## Permissions
 
 Use BB's thread permission selector:
