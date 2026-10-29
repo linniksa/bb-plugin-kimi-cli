@@ -59,7 +59,7 @@ Automatic reviewer mode, fast service tiers, fork, archive forwarding and manual
 
 ## Local health
 
-Health checks only read the local executable and existing file credentials. They never contact the quota service, refresh a token or migrate keyring storage. Account and subscription metadata come from usage collection instead.
+Health checks only read the local executable and existing file credentials. They never contact the quota service, refresh a token or migrate keyring storage. Account and subscription metadata come from usage collection instead. Usage resources retain disconnected machines, return collection failures as unavailable states, and use provider-issued user identity to recognize the same account across machines. Explicit refresh requests fetch after an older background request rather than accepting its result.
 
 ## Privacy and compatibility
 
