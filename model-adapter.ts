@@ -8,6 +8,7 @@ import { experimental_resolveExecutablePath, type AvailableModel } from '@get-bb
 import { dataDirectory } from './credentials.ts';
 import { pythonInterpreter, type CliKind } from './installation.ts';
 import { loadModelMetadata, type ModelMetadata } from './model-metadata.ts';
+import { pythonAcp } from './python-acp.ts';
 
 export function presentKimiModel(model: AvailableModel, metadata: ModelMetadata | undefined, kind: CliKind): AvailableModel {
   if (!metadata) return model;
@@ -52,13 +53,13 @@ export async function adaptKimiRequest(message: unknown): Promise<unknown> {
   const env = { ...process.env, ...vars.data, ...parsed.data.env };
   const executable = await executableInPath(env, parsed.data.cwd ?? (typeof params.cwd === 'string' ? params.cwd : process.cwd()));
   if (!executable) return message;
-  if (await pythonInterpreter(await realpath(executable))) return message;
-  const kind = 'node';
+  const python = await pythonInterpreter(await realpath(executable));
+  const kind = python ? 'python' : 'node';
   const metadata = await loadModelMetadata(kind, envelope.data.method === 'model/list', env);
   const dialectId = `kimi-cli-${createHash('sha256').update(`${kind}:${dataDirectory(kind, env)}`).digest('hex').slice(0, 16)}`;
   if (!catalogs.has(dialectId)) experimental_registerAcpDialect({ id: dialectId, presentModel: model => presentKimiModel(model, catalogs.get(dialectId)?.[model.id], kind) });
   catalogs.set(dialectId, metadata);
-  const launch = parsed.data;
+  const launch = python ? { ...parsed.data, command: python, args: ['-c', pythonAcp], env: { ...parsed.data.env, KIMI_BB_MODEL_METADATA: JSON.stringify(metadata) } } : parsed.data;
   const next = { ...holder, providerOptions: { ...providerOptions.data, acpDialect: dialectId, acpLaunchSpec: launch } };
   return { ...envelope.data, params: options.success ? { ...params, options: next } : next };
 }

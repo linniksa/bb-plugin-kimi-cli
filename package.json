@@ -32,7 +32,8 @@
   },
   "scripts": {
     "check": "tsc --noEmit",
-    "test": "node --experimental-strip-types --test *.test.ts && node --experimental-strip-types session-check.ts"
+    "test": "node --experimental-strip-types --test *.test.ts && node --experimental-strip-types session-check.ts",
+    "test:cli": "node --experimental-strip-types cli-check.ts"
   },
   "license": "MIT",
   "repository": {

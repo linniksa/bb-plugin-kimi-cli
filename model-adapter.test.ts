@@ -1,5 +1,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { mkdtemp, writeFile, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { modelMetadata } from './model-metadata.ts';
 import { presentKimiModel, adaptKimiRequest } from './model-adapter.ts';
 import type { AvailableModel } from '@get-bb/plugin-sdk/provider-bridge';
@@ -122,4 +125,22 @@ test('the adapter leaves unrelated launch specifications and protocol responses 
     { method: 'thread/start', params: { options: { providerOptions: { acpLaunchSpec: { command: 'other-agent', args: [], env: {}, displayName: 'Other' } } } } }]) {
     assert.equal(await adaptKimiRequest(message), message);
   }
+});
+
+test('CLI generation and model metadata follow the request environment without changing the process', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'kimi-launch-'));
+  const originalPath = process.env.PATH;
+  try {
+    await writeFile(join(root, 'kimi'), '#!/fixture/bin/python\n', { mode: 0o755 });
+    await writeFile(join(root, 'config.toml'), '[models.custom]\nmodel="fixture-model"\ndisplay_name="Request-local model"\n');
+    const message = { id: 1, method: 'model/list', params: { envVars: { PATH: root, KIMI_SHARE_DIR: root },
+      providerOptions: { acpLaunchSpec: { command: 'kimi', args: ['acp'], env: {}, displayName: 'Kimi' } } } };
+    const adapted = await adaptKimiRequest(message) as typeof message;
+    const launch = adapted.params.providerOptions.acpLaunchSpec;
+    assert.equal(launch.command, '/fixture/bin/python');
+    const env = launch.env as Record<string, string>;
+    assert.equal(JSON.parse(env.KIMI_BB_MODEL_METADATA).custom.label, 'Request-local model');
+    assert.deepEqual(adapted.params.envVars, message.params.envVars);
+    assert.equal(process.env.PATH, originalPath);
+  } finally { await rm(root, { recursive: true, force: true }); }
 });

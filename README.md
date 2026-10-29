@@ -7,8 +7,8 @@ This plugin wraps Kimi Code CLI. The repository and package are named `bb-plugin
 ## Requirements and installation
 
 - BB 0.47.1+ with Plugin SDK 0.6.79-compatible APIs.
-- Kimi Code on PATH, signed in with `kimi login`. Modern Node and legacy Python installations are detected separately.
-- Node.js 22.19+ for source checks.
+- Kimi Code on PATH, signed in with `kimi login`. The modern Node CLI and legacy Python CLI are detected separately; Python 1.50.0 and Node 2.3.3 are covered by real-CLI compatibility checks.
+- Node.js 22.19+ for source and modern CLI checks.
 
 Install directly from GitHub:
 
@@ -50,9 +50,11 @@ Legacy Python CLI startup update reminders are controlled by `KIMI_CLI_NO_AUTO_U
 
 ## Models and Thinking
 
-Modern Node sessions expose their native model names and per-model Thinking controls. Legacy Python retains its existing ACP model catalog until its compatibility server is enabled.
+Models appear once under the CLI's display names. Thinking is a separate per-model control: the legacy Python adapter exposes only On/Off modes that the CLI can execute; modern Node sessions expose their native effort levels. An always-thinking model has no Off choice; a confirmed mandatory binary setting is labelled **Always on**. BB still renders a singleton as a selectable control; the plugin cannot change that host layout. Highspeed models retain their own identity and quota-cost labels; the plugin does not infer model families by stripping name suffixes or enable a Fast service tier.
 
 Local model metadata follows the selected CLI generation and launch environment. When existing managed credentials are readable, discovery can enrich names and thinking requirements from the official model catalog. This read-only request is bounded and briefly cached; offline discovery falls back to the CLI configuration. Tokens are not refreshed or sent to BB. Explicit model overrides take precedence over enrichment. Declared effort sets constrain inherited choices and defaults; absent effort metadata preserves the native CLI catalog. Without an authoritative effort declaration, Node 2.3.3 can still advertise an inherited current effort that it later rejects.
+
+The Python compatibility server adds native ACP model/Thinking options while keeping Kimi's session loading, streaming, tools and permission handling. BB model discovery and selections are session-local and do not rewrite the interactive CLI's defaults. This adapter relies on the tested Python server and ACP router internals; other Python releases need verification before claiming compatibility. Modern Node sessions use Kimi's own config-option implementation.
 
 ## Permissions
 
@@ -77,7 +79,7 @@ Credentials remain on their machine. Python Kimi Code owns token refresh and its
 
 Python account/usage collection relies on its CLI internals. The Node adapter reads the managed Kimi provider from config.toml and supports file OAuth credentials, configured API keys and api_key_env. KIMI_CODE_HOME is honored; keyring credentials and custom endpoints are unsupported. Account and quota requests are restricted to the official Kimi Code service hosts and do not follow redirects. A failed optional profile request does not discard quota.
 
-Local checks cover macOS. Native CLI migrations and live Node OAuth refresh are not covered.
+Local checks cover macOS; CI also runs both real CLI generations against a local HTTP fixture on Linux. Native CLI migrations and live Node OAuth refresh are not covered by those tests.
 
 Keep the plugin source directory while using a local path installation. Do not commit local credentials, BB settings backups, account-response recordings, or session transcripts.
 
@@ -89,7 +91,9 @@ npm test
 bb plugin build .
 ```
 
-The tests cover quota/profile parsing, maintenance protocol validation, the shared ACP bridge's conformance suite, and allow/deny/full-access behavior against a synthetic ACP agent. They do not establish operating-system isolation or test every Kimi tool. Live checks also verified provider registration, model availability, and account/quota collection; the graphical UI has not been inspected.
+The tests cover model identity and metadata, per-generation Thinking controls, quota/profile identity, local health and credential boundaries, usage inventory/cache/refresh failures, native skill roots, diagnostic command routing, installer selection, maintenance validation, ACP conformance, and allow/deny/full-access behavior. They do not establish operating-system isolation or test every Kimi tool. Live checks also verified provider registration, model availability, and account/quota collection; the graphical UI has not been inspected.
+
+Real CLI compatibility checks use `npm run test:cli`. Set `KIMI_TEST_PYTHON` to an interpreter with the legacy CLI installed and `KIMI_TEST_NODE` to the modern CLI executable. The [CI workflow](.github/workflows/check.yml) is the source of truth for installation and pinned versions. These tests use isolated homes, fixture credentials and a local model endpoint; they do not use a subscription.
 
 ## License and attribution
 
