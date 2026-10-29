@@ -31,3 +31,11 @@ test('account and subscription come from the Kimi profile, with no guessed tier'
   assert.equal(unavailable.accountKey, null);
   assert.equal(parseUsage(quota, { ...profile, user_id: '' }).accountKey, null);
 });
+
+test('modern quota supports monthly windows and rejects an empty quota response', () => {
+  const usage = parseUsage({ usages: { limit_month_total: { used_ratio: '0.25' }, limit_month_code: { used_ratio: 1.2 } } });
+  assert.equal(usage.status, 'ok');
+  if (usage.status !== 'ok') assert.fail();
+  assert.deepEqual(usage.windows.map(w => [w.label, w.usedPercent]), [['Monthly total', 25], ['Monthly code', 120]]);
+  assert.throws(() => parseUsage({ usages: {} }));
+});

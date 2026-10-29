@@ -7,7 +7,7 @@ This plugin wraps Kimi Code CLI. The repository and package are named `bb-plugin
 ## Requirements and installation
 
 - BB 0.47.1+ with Plugin SDK 0.6.79-compatible APIs.
-- Python Kimi Code on PATH, signed in with `kimi login`. Tested on macOS with CLI 1.50.0.
+- Kimi Code on PATH, signed in with `kimi login`. Modern Node and legacy Python installations are detected separately.
 - Node.js 22.19+ for source checks.
 
 Install directly from GitHub:
@@ -63,9 +63,11 @@ Health checks only read the local executable and existing file credentials. They
 
 ## Privacy and compatibility
 
-Credentials remain on their machine. Kimi Code owns token refresh and its locking; only quota and displayable account metadata cross host RPC. The plugin does not store tokens, proxy inference requests, or log account responses. Collection is bounded and quota RPC results are cached briefly; explicit refresh fetches again.
+Credentials remain on their machine. Python Kimi Code owns token refresh and its locking; the Node adapter reads its existing token without rotating or writing credentials. If that token expires, open Kimi to refresh its login, then refresh BB usage. In both cases, only quota and displayable account metadata cross host RPC. The plugin does not store tokens, proxy inference requests, or log account responses. Collection is bounded and quota RPC results are cached briefly; explicit refresh fetches again.
 
-Account/usage collection currently relies on Python Kimi Code internals. The newer Node Kimi Code CLI, standalone binaries, custom config locations, and untested operating systems are not supported by this collector. An unsupported install reports an error. Account and quota endpoints are restricted to the official Kimi Code service hosts.
+Python account/usage collection relies on its CLI internals. The Node adapter reads the managed Kimi provider from config.toml and supports file OAuth credentials, configured API keys and api_key_env. KIMI_CODE_HOME is honored; keyring credentials and custom endpoints are unsupported. Account and quota requests are restricted to the official Kimi Code service hosts and do not follow redirects. A failed optional profile request does not discard quota.
+
+Local checks cover macOS. Native CLI migrations and live Node OAuth refresh are not covered.
 
 Keep the plugin source directory while using a local path installation. Do not commit local credentials, BB settings backups, account-response recordings, or session transcripts.
 
