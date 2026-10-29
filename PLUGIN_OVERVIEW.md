@@ -1,15 +1,19 @@
+## Your workflow, with Kimi Code
+
+Choose Kimi Code in BB's provider picker and work in your usual threads, with BB tools, instructions and native skills. Use your existing CLI login. No custom ACP agent registration is required.
+
 ## What you get
 
-Use Kimi Code in BB without a custom ACP registration. Select models by their CLI display names with a separate Thinking control, use BB tools and instructions, and see account, subscription and quota information in Provider usage. The provider includes the official Kimi mark and host-aware native skill discovery.
+- **Models you recognize.** See the CLI's model names, including Highspeed variants and their cost labels.
+- **Thinking controls that match the model.** Node exposes native effort levels; legacy Python uses binary Thinking. A confirmed mandatory binary mode reads `Always on`.
+- **Account and quota at a glance.** Provider usage shows your account, subscription plan, available quota windows and reset times. Missing profile details stay blank.
+- **Permissions you choose.** Use `Accept Edits` for ACP approval requests or `Full Access` to approve them automatically. User, project and extra skill roots are discovered on the workspace host.
+- **Setup and updates in BB.** Check CLI versions and use supported Install/Update actions. Updates preserve the detected installation channel; `bb kimi status` provides read-only diagnostics.
 
-## Installation and updates
+## Before you start
 
-BB's provider maintenance controls report installed and available CLI versions and offer Install or Update actions for recognized installation sources. Updates preserve the detected package manager. The `bb kimi status` command provides local readiness checks and source-aware update guidance, with registry queries available explicitly. Checking status never installs software or enables unattended upgrades. Plugin and CLI updates are separate.
+Requires BB 0.47.1+ with compatible SDK APIs, plus Kimi Code CLI installed and signed in on the machine running the agent. Your Kimi account and subscription requirements apply. Modern Node and legacy Python are supported; account and session migration between them is separate.
 
-## Requirements
+Credentials stay on their machine. Updates are requested explicitly. ACP permission checks are not an operating-system shell sandbox. This is an independent community plugin, not endorsed by Moonshot AI or BB.
 
-Requires BB 0.47.1+ with compatible Plugin SDK 0.6.79 APIs, and Kimi Code CLI installed and signed in on the machine running the agent. Kimi account and subscription requirements still apply. The modern Node CLI and legacy Python CLI use separate adapters; legacy-to-modern account or session migration is not automatic.
-
-Credentials stay on their machine. The provider supports Accept Edits and Full Access; ACP file-write checks do not provide an operating-system shell sandbox. This is an independent community plugin, not endorsed by Moonshot AI or BB.
-
-See the [documentation](https://github.com/linniksa/bb-plugin-kimi-cli#readme) for supported versions and integration limits.
+See the [English interface examples and setup guide](https://github.com/linniksa/bb-plugin-kimi-cli#interface-examples) for screenshots, supported versions and integration limits.

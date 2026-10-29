@@ -8,7 +8,7 @@
   },
   "bb": {
     "name": "Kimi Code",
-    "description": "Kimi Code provider for BB with native model discovery, account, subscription and quota integration.",
+    "description": "Bring Kimi Code to BB with model and Thinking controls, account and quota visibility, native skills, and CLI updates.",
     "branding": {
       "icon": "./icons/kimi.svg"
     },

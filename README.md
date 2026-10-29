@@ -1,8 +1,32 @@
 # Kimi Code for BB
 
-An independent Kimi Code provider plugin for BB, with an official Kimi mark, model discovery, account and subscription details, and quota windows in Provider usage. No custom ACP agent configuration is required.
+**Your Kimi Code workflow, inside BB.**
 
-This plugin wraps Kimi Code CLI. The repository and package are named `bb-plugin-kimi-cli`. The plugin, provider and bundled skill all use `kimi-cli`, and BB displays **Kimi Code**. Technical IDs stay stable when display copy changes. Conversations, tools, permissions and session restoration use BB's published ACP bridge; ACP is the transport, not part of the provider ID.
+Choose Kimi Code alongside your other BB providers. Work with your existing CLI login, select a model and Thinking mode, and keep your account, subscription and quota in view. No custom ACP agent configuration is required.
+
+[Features](#what-you-get) · [Interface examples](#interface-examples) · [Installation](#requirements-and-installation) · [Compatibility](#privacy-and-compatibility)
+
+## What you get
+
+- **Familiar model names.** Choose from the models your CLI provides, with Highspeed variants and cost labels kept visible.
+- **Per-model Thinking.** Use native Node effort levels or legacy Python's binary modes. Confirmed mandatory binary Thinking is labelled **Always on**.
+- **Account and quota visibility.** See your subscription plan, available quota windows and reset times in **Provider usage**.
+- **BB tools, skills and permissions.** Keep working with BB instructions and tools, native skill discovery, and your choice of **Accept Edits** or **Full Access**.
+- **CLI maintenance in BB.** Check versions, install or update through supported channels, and inspect readiness with read-only diagnostics.
+
+## Interface examples
+
+### Choose a model and Thinking mode
+
+![English BB model picker showing Kimi Code models and an Always on Thinking setting](docs/screenshots/model-picker-en.jpg)
+
+The model picker uses the CLI's display names. This English UI capture shows a legacy Python session with mandatory Thinking; modern Node models can expose granular effort choices. Available models and controls depend on your CLI and account.
+
+### Check your account and quota
+
+![Kimi Code Provider usage card showing a Moderato plan, weekly and five-hour quota windows, and reset countdowns](docs/screenshots/provider-usage-en.png)
+
+Your account, plan, quota and reset times appear together in **Provider usage**. This is an example account state; plans, windows and values vary by account.
 
 ## Requirements and installation
 
@@ -27,6 +51,8 @@ bb plugin install .
 Select **Kimi Code** in BB. Model choices come from the installed CLI. Account details come from Kimi's `/me` endpoint and quota from `/usages`; an unavailable profile stays blank instead of guessing the account or subscription.
 
 ## Upgrading from earlier registrations
+
+This plugin wraps Kimi Code CLI. The repository and package are named `bb-plugin-kimi-cli`. The plugin, provider and bundled skill all use `kimi-cli`, and BB displays **Kimi Code**. Technical IDs stay stable when display copy changes. Conversations, tools, permissions and session restoration use BB's published ACP bridge; ACP is the transport, not part of the provider ID.
 
 Version 0.4 changes the provider ID from `acp-kimi` to `kimi-cli`. BB persists provider IDs in threads and its public SDK does not support changing them. This plugin does not rewrite BB's database or register a second provider as an alias. Existing thread history remains, but continuing an old thread requires its original provider registration. Start new threads with **Kimi Code**; keep the earlier registration available if old threads must continue.
 
