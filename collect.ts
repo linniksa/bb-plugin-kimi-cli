@@ -3,7 +3,7 @@ import { promisify } from 'node:util';
 import { readFile, realpath } from 'node:fs/promises';
 import { experimental_resolveExecutablePath } from '@get-bb/plugin-sdk/provider-bridge';
 import { z } from 'zod';
-import { parseUsage, usageSchema } from './usage.ts';
+import { parseUsage, usageSchema, usageBase } from './usage.ts';
 import { collector } from './collector.ts';
 
 const exec = promisify(execFile);
@@ -13,7 +13,7 @@ const response = z.discriminatedUnion('status', [
 ]);
 
 export async function collectUsage(signal?: AbortSignal): Promise<z.infer<typeof usageSchema>> {
-  const base = { accountEmail: null, planLabel: null };
+  const base = usageBase;
   const executable = await experimental_resolveExecutablePath('kimi');
   if (!executable) return { ...base, status: 'not_installed' };
   try {
