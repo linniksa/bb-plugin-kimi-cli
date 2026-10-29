@@ -24,8 +24,7 @@ test('provider bridge keeps ACP handshake and validates Kimi Code maintenance re
     harness.sendRequest(4, 'provider/health', { providerId: provider.id });
     const missing = providerHealthResultSchema.parse((await harness.waitForResponse(4)).result);
     assert.equal(missing.supported && missing.health.status, 'not_installed');
-
-    const output = JSON.stringify({ status: 'ok', payload: { usage: { limit: 100, used: 37 } }, account: { user_id: 'test-user', email: 'test@example.test', user_level_name: 'Moderato' } });
+    const output = JSON.stringify({ status: 'ok', payload: { usage: { limit: 100, used: 120 } }, account: { user_id: 'test-user', email: 'test@example.test', user_level_name: 'Moderato' } });
     await writeFile(join(root, 'python'), `#!/bin/sh\nprintf '%s\\n' '${output}'\n`, { mode: 0o755 });
     await writeFile(join(root, 'kimi'), `#!${join(root, 'python')}\n`, { mode: 0o755 });
     harness.sendRequest(5, 'provider/usage', { providerId: provider.id });
@@ -34,7 +33,7 @@ test('provider bridge keeps ACP handshake and validates Kimi Code maintenance re
     if (!result.supported || result.usage.status !== 'ok') assert.fail();
     assert.equal(result.usage.planLabel, 'Moderato');
     assert.equal(result.usage.accountEmail, 'test@example.test');
-    assert.equal(result.usage.windows[0].usedPercent, 37);
+    assert.equal(result.usage.windows[0].usedPercent, 100);
     assert.equal(result.usage.windows[0].cost, undefined);
     assert.equal(provider.capabilities.supportsServiceTier, false);
   } finally {

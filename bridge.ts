@@ -39,8 +39,8 @@ export const experimental_providerBridge = {
         }
         const usage = await collectUsage(AbortSignal.timeout(30000));
         if (request.method === 'provider/usage') {
-          // The bridge contract omits cost when absent; the Provider usage RPC contract uses null.
-          const bridgeUsage = usage.status === 'ok' ? { ...usage, windows: usage.windows.map(({ cost, ...window }) => window) } : usage;
+          // BB's bridge caps percentages at 100 and omits absent cost; quota RPC preserves raw overage.
+          const bridgeUsage = usage.status === 'ok' ? { ...usage, windows: usage.windows.map(({ cost, ...window }) => ({ ...window, usedPercent: Math.min(100, window.usedPercent) })) } : usage;
           io.sendResult(request.id, providerUsageResultSchema.parse({ supported: true, usage: bridgeUsage }));
           return;
         }
